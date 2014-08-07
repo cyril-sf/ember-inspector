@@ -5,6 +5,8 @@ export default Ember.Route.extend({
     this.get('port').on('view:startInspecting', this, this.startInspecting);
     this.get('port').on('view:pinView', this, this.pinView);
     this.get('port').on('view:unpinView', this, this.unpinView);
+
+chrome.devtools.inspectedWindow.eval('console.warn("Ember Inspector viewTree:getTree");');
     this.get('port').send('view:getTree');
   },
 

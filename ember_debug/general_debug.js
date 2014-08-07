@@ -17,6 +17,7 @@ var GeneralDebug = Ember.Object.extend(PortMixin, {
     options.from = 'inspectedWindow';
     options.applicationId = this.get('port.uniqueId');
 
+    window.console.warn('Ember Debug send booted');
     window.postMessage(options, [], '*');
   },
 

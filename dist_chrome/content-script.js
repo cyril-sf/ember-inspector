@@ -9,7 +9,9 @@
   listenToPort(emberExtensionPort);
 
   function messageHandler( event ) {
+window.console.warn('Content script receives message');
     if ( event.data.type === 'general:applicationBooted' ) {
+window.console.warn('Content script receives Ember Debug booted');
       // Ember Debug initialized
       window.postMessage({EmberExtensionPort: true}, [ emberDebugPort ], '*');
       // Propagate the event
@@ -19,7 +21,7 @@
     }
   }
 
-  debugger;
+  window.console.warn('Content script load');
   window.addEventListener('message', messageHandler);
 
   function listenToPort(port) {

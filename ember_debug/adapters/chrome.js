@@ -18,12 +18,12 @@ var ChromeAdapter = BasicAdapter.extend({
   _connect: Ember.on('init', function() {
     var self = this;
 
-    console.log('Ember Debug _connect');
+    console.warn('Ember Debug _connect');
 
     function messageHandler( event ) {
-console.log('Ember Debug receives message', event.data);
+console.warn('Ember Debug receives message', event.data);
       if( event.data.EmberExtensionPort ) {
-console.log('Ember Debug receives MessagePort');
+console.warn('Ember Debug receives MessagePort');
         var chromePort = event.ports[0];
         self.set('_chromePort', chromePort);
 

@@ -26,14 +26,14 @@ export default  BasicAdapter.extend({
       }
       self._messageReceived(message);
     });
-    chrome.devtools.inspectedWindow.eval("console.log('Ember Inspector _connect');");
+    chrome.devtools.inspectedWindow.eval("console.warn('Ember Inspector _connect');");
     this._injectDebugger();
   }.on('init'),
 
   _handleReload: function() {
     var self = this;
     chrome.devtools.network.onNavigated.addListener(function() {
-chrome.devtools.inspectedWindow.eval("console.log('Ember Inspector _handleReload');");
+chrome.devtools.inspectedWindow.eval("console.warn('Ember Inspector _handleReload');");
       location.reload(true);
     });
   }.on('init'),
@@ -47,7 +47,7 @@ chrome.devtools.inspectedWindow.eval("console.log('Ember Inspector _handleReload
         sendIframes([opts.url]);
       }
     });
-    chrome.devtools.inspectedWindow.eval("console.log('Ember Inspector _injectDebugger');");
+    chrome.devtools.inspectedWindow.eval("console.warn('Ember Inspector _injectDebugger');");
   }
 });
 
@@ -65,6 +65,6 @@ function loadEmberDebug() {
     xhr.open("GET", chrome.extension.getURL('/ember_debug/ember_debug.js'), false);
     xhr.send();
     emberDebug = xhr.responseText;
-    chrome.devtools.inspectedWindow.eval("console.log('Ember Inspector loadEmberDebug');");
+    chrome.devtools.inspectedWindow.eval("console.warn('Ember Inspector loadEmberDebug');");
   }
 }
