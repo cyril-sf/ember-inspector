@@ -12,15 +12,15 @@ var GeneralDebug = Ember.Object.extend(PortMixin, {
   portNamespace: 'general',
 
   sendBooted: function() {
-    this.sendMessage('applicationBooted', {
-      booted: Ember.BOOTED
-    });
+    var options = {booted: Ember.BOOTED};
+    options.type = 'general:applicationBooted';
+    options.from = 'inspectedWindow';
+    options.applicationId = this.get('port.uniqueId');
+
+    window.postMessage(options, [], '*');
   },
 
   messages: {
-    applicationBooted: function() {
-      this.sendBooted();
-    },
     getLibraries: function() {
       var libraries = arrayize(Ember.libraries);
       this.sendMessage('libraries', { libraries: libraries });

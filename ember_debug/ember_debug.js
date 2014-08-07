@@ -78,7 +78,6 @@ EmberDebug = Ember.Namespace.extend({
       this.startModule('promiseDebug', PromiseDebug);
 
       this.generalDebug.sendBooted();
-      this.viewDebug.sendTree();
     });
   }
 

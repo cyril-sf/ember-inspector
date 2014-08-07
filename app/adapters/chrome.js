@@ -7,6 +7,7 @@ export default  BasicAdapter.extend({
 
   sendMessage: function(options) {
     options = options || {};
+    chrome.devtools.inspectedWindow.eval("console.log('Ember Inspector send: " + JSON.stringify(options) + "');");
     this.get('_chromePort').postMessage(options);
   },
 
@@ -25,12 +26,14 @@ export default  BasicAdapter.extend({
       }
       self._messageReceived(message);
     });
+    chrome.devtools.inspectedWindow.eval("console.log('Ember Inspector _connect');");
+    this._injectDebugger();
   }.on('init'),
 
   _handleReload: function() {
     var self = this;
     chrome.devtools.network.onNavigated.addListener(function() {
-      self._injectDebugger();
+chrome.devtools.inspectedWindow.eval("console.log('Ember Inspector _handleReload');");
       location.reload(true);
     });
   }.on('init'),
@@ -44,10 +47,7 @@ export default  BasicAdapter.extend({
         sendIframes([opts.url]);
       }
     });
-  }.on('init'),
-
-  willReload: function() {
-    this._injectDebugger();
+    chrome.devtools.inspectedWindow.eval("console.log('Ember Inspector _injectDebugger');");
   }
 });
 
@@ -65,5 +65,6 @@ function loadEmberDebug() {
     xhr.open("GET", chrome.extension.getURL('/ember_debug/ember_debug.js'), false);
     xhr.send();
     emberDebug = xhr.responseText;
+    chrome.devtools.inspectedWindow.eval("console.log('Ember Inspector loadEmberDebug');");
   }
 }

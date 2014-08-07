@@ -2,14 +2,25 @@
 
   "use strict";
 
-  window.addEventListener('message', function(event) {
-    if (event.data === 'debugger-client') {
-      var port = event.ports[0];
-      listenToPort(port);
-    } else if (event.data.type) {
+  var mc = new MessageChannel(),
+      emberExtensionPort = mc.port1,
+      emberDebugPort = mc.port2;
+
+  listenToPort(emberExtensionPort);
+
+  function messageHandler( event ) {
+    if ( event.data.type === 'general:applicationBooted' ) {
+      // Ember Debug initialized
+      window.postMessage({EmberExtensionPort: true}, [ emberDebugPort ], '*');
+      // Propagate the event
       chrome.extension.sendMessage(event.data);
+
+      window.removeEventListener('message', messageHandler);
     }
-  });
+  }
+
+  debugger;
+  window.addEventListener('message', messageHandler);
 
   function listenToPort(port) {
     port.addEventListener('message', function(event) {
