@@ -1,6 +1,7 @@
 {{#x-list name="view-tree" schema=(schema-for "view-tree") as |list|}}
-  {{#list.vertical-collection content=model as |content index|}}
-    {{view-item
+  {{#list.vertical-collection model as |content index|}}
+    <tr class={{list.itemClass}}>
+      {{view-item
         model=content
         inspect=(action "inspect")
         inspectElement=(action "inspectElement")
@@ -11,5 +12,6 @@
         on-mouseenter=(action "previewLayer" content)
         on-mouseleave=(action "hidePreview")
       }}
+    </tr>
   {{/list.vertical-collection}}
 {{/x-list}}

@@ -34,6 +34,7 @@
   "author": "Tilde, Inc.",
   "license": "MIT",
   "devDependencies": {
+    "@html-next/vertical-collection": "^1.0.0-beta.2",
     "amd-name-resolver": "^0.0.5",
     "aws-sdk": "^2.3.3",
     "babel-eslint": "^6.1.2",
@@ -78,7 +79,6 @@
     "loader.js": "^4.0.1",
     "mkdirp": "^0.5.1",
     "rimraf": "^2.5.2",
-    "smoke-and-mirrors": "github:runspired/smoke-and-mirrors#b0bf8a7",
     "yauzl": "^2.4.1"
   },
   "dependencies": {

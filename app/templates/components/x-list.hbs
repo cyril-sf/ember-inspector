@@ -23,7 +23,8 @@
   {{yield
     (hash
       cell=(component "x-list-cell" tagName="td")
-      vertical-collection=(component "vertical-collection" defaultHeight=30 tagName="tbody" itemClassNames=(concat "list__row js-" name "-item " itemClass) containerSelector=".js-list-content")
+      vertical-collection=(component "vertical-collection" minHeight=30 tagName="tbody" containerSelector=".js-list-content")
+      itemClass=(concat "list__row js-" name "-item " itemClass)
       rowEvents=content.rowEvents
     )
   }}
