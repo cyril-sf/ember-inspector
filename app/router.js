@@ -30,13 +30,16 @@ Router.map(function() {
     });
 
     this.route('render-tree', { resetNamespace: true });
-    this.route('container-types', { resetNamespace: true }, function() {
-      this.route('container-type', { path: '/:type_id', resetNamespace: true });
+    this.route('containers', { path: '/containers', resetNamespace: true }, function() {
+      this.route('container', { path: '/:container_type_id/instance/:container_instance_id' }, function() {
+        this.route('container-types', { path: '/type' }, function() {
+          this.route('container-type', { path: '/:type_id' });
+        });
+      });
     });
 
     this.route('deprecations', { resetNamespace: true });
   });
-
 });
 
 export default Router;

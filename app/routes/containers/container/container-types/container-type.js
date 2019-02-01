@@ -1,8 +1,10 @@
 import { Promise } from 'rsvp';
 import { get } from '@ember/object';
-import TabRoute from "ember-inspector/routes/tab";
+import Route from '@ember/routing/route';
 
-export default TabRoute.extend({
+export default Route.extend({
+  controllerName: 'container-type',
+
   setupController(controller) {
     controller.setProperties({
       search: '',
@@ -11,8 +13,9 @@ export default TabRoute.extend({
     this._super(...arguments);
   },
   model(params) {
-    const type = params.type_id;
+    const containerType = params.type_id;
     const port = this.get('port');
+    let containerRef = this.modelFor('containers.container');
     return new Promise((resolve, reject) => {
       port.one('container:instances', message => {
         if (message.status === 200) {
@@ -21,7 +24,8 @@ export default TabRoute.extend({
           reject(message);
         }
       });
-      port.send('container:getInstances', { containerType: type });
+      containerRef = containerRef.container_type_id+':'+containerRef.container_instance_id;
+      port.send('container:getInstances', { containerRef, containerType });
     });
   },
 
@@ -29,7 +33,7 @@ export default TabRoute.extend({
   actions: {
     error(err) {
       if (err && err.status === 404) {
-        this.transitionTo('container-types.index');
+        this.transitionTo('containers.container.containers-types.container-type.index');
         return false;
       }
     },

@@ -143,10 +143,18 @@ function buildSubTree(routeTree, route) {
 
       const router = this.get('router');
       const routerLib = router._routerMicrolib || router.router;
-      routeHandler = routerLib.getHandler(handler);
-      controllerName = routeHandler.get('controllerName') || routeHandler.get('routeName');
-      controllerFactory = owner.factoryFor ? owner.factoryFor(`controller:${controllerName}`) : owner._lookupFactory(`controller:${controllerName}`);
-      controllerClassName = this.getClassName(controllerName, 'controller');
+      let isWithinEngine = router._engineInfoByRoute[handler];
+      let hasBeenLoaded = router._seenHandlers[handler];
+      if (isWithinEngine && !hasBeenLoaded) {
+        controllerName = 'Unloaded controller name';
+        controllerFactory = true;
+        controllerClassName = 'Unloaded controller class name';
+      } else {
+        routeHandler = routerLib.getHandler(handler);
+        controllerName = routeHandler.get('controllerName') || routeHandler.get('routeName');
+        controllerFactory = owner.factoryFor ? owner.factoryFor(`controller:${controllerName}`) : owner._lookupFactory(`controller:${controllerName}`);
+        controllerClassName = this.getClassName(controllerName, 'controller');
+      }
       templateName = this.getClassName(handler, 'template');
 
       subTree[handler] = {

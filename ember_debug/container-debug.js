@@ -37,10 +37,34 @@ export default EmberObject.extend(PortMixin, {
     return type[0] === '-' || this.get('TYPES_TO_SKIP').indexOf(type) !== -1;
   },
 
-  instancesByType() {
+  all() {
+    let containers = [
+      'app:main'
+    ];
+
+    const router = this.get('container').lookup('router:main');
+    containers.pushObjects( Object.keys(router._engineInfoByRoute).map(function(key) {
+      return router._engineInfoByRoute[key].name + ':' + router._engineInfoByRoute[key].instanceId;}
+    ).uniq());
+
+    return containers;
+  },
+
+  getContainer(containerRef) {
+    if (containerRef === 'app:main') {
+      return this.get('container');
+    } else {
+      const router = this.get('container').lookup('router:main');
+      let container_type_id, container_instance_id;
+      [container_type_id, container_instance_id] = containerRef.split(':');
+      return router._engineInstances[container_type_id][container_instance_id].__container__;
+    }
+  },
+
+  instancesByType(container) {
     let key;
     let instancesByType = {};
-    let cache = this.get('container').cache;
+    let cache = container.cache;
     // Detect if InheritingDict (from Ember < 1.8)
     if (typeof cache.dict !== 'undefined' && typeof cache.eachLocal !== 'undefined') {
       cache = cache.dict;
@@ -59,18 +83,20 @@ export default EmberObject.extend(PortMixin, {
     return instancesByType;
   },
 
-  getTypes() {
+  getTypes(containerRef) {
     let key;
     let types = [];
-    const instancesByType = this.instancesByType();
+    const container = this.getContainer(containerRef);
+    const instancesByType = this.instancesByType(container);
     for (key in instancesByType) {
       types.push({ name: key, count: instancesByType[key].length });
     }
     return types;
   },
 
-  getInstances(type) {
-    const instances = this.instancesByType()[type];
+  getInstances(containerRef, type) {
+    const container = this.getContainer(containerRef);
+    const instances = this.instancesByType(container)[type];
     if (!instances) {
       return null;
     }
@@ -82,13 +108,19 @@ export default EmberObject.extend(PortMixin, {
   },
 
   messages: {
-    getTypes() {
+    all() {
+      this.sendMessage('all', {
+        containers: this.all()
+      });
+    },
+
+    getTypes(message) {
       this.sendMessage('types', {
-        types: this.getTypes()
+        types: this.getTypes(message.containerRef)
       });
     },
     getInstances(message) {
-      let instances = this.getInstances(message.containerType);
+      let instances = this.getInstances(message.containerRef, message.containerType);
       if (instances) {
         this.sendMessage('instances', {
           instances,

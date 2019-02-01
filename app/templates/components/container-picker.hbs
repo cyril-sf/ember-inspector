@@ -1,0 +1,8 @@
+<div class="dropdown">
+  <select class="dropdown__select" onchange={{action "onSelect" value="target.value"}}>
+    {{#each containers as |containerRef index|}}
+    <option value={{index}}>{{containerRef.container_type_id}}:{{containerRef.container_instance_id}}</option>
+    {{/each}}
+  </select>
+  {{svg-jar "dropdown-arrow" class="dropdown__arrow"}}
+</div>
